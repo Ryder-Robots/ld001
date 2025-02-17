@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 project(ld001 DESCRIPTION "basic land based robot")
 
 include(FindPkgConfig)
+include(FetchContent)
 
 set(CPACK_GENERATOR "DEB")    
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -15,7 +16,6 @@ set(CPACK_PACKAGE_CONTACT "Aaron Spiteri")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/postinst")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/prerm")
-
 
 include(CPack)
 
@@ -55,9 +55,20 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/bin/fatcnt" DESTINATION
   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 set(fatcnt_SOURCES
-        src/ld001.cpp
+    src/ld001.cpp
+    src/ld001/events/msp104/msp104_ctl_in.cpp
+    src/ld001/events/msp104/msp104_hbridge_serializer.cpp
+    src/ld001/events/ai/ai_virtual_predictor.cpp
+    src/ld001/events/hbridgecontroller.cpp
+    src/ld001/events/catagorizer/ldsqu001mapper.cpp
 )
 
+set(JSON_VERSION v3.11.3)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/${JSON_VERSION}/json.tar.xz)
+FetchContent_MakeAvailable(json)
+list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
+
+include_directories(${json_SOURCE_DIR}/include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include)
+
 add_executable(fatcnt ${fatcnt_SOURCES})
-target_link_libraries(fatcnt rrobot)
-target_link_libraries(fatcnt dlib)
+target_link_libraries(fatcnt rrobot dlib wiringPi)
