@@ -8,6 +8,15 @@ using namespace rrobot;
 
 Environment Ld001EnvProcessor::createEnvironment(json manifest) {
 
+    VALID_MULTITYPE_KEYS_INIT;
+
+    MULTITYPE_T multiType = VALID_MULTITYPE_KEYS.at(manifest["hwmodel"]["multitype"]);
+    MSP_VERSION mspVersion = MSP_VERSION::SKULD001;
+    uint32_t capability = static_cast<uint32_t>(manifest["hwmodel"]["capability"]);
+
+    HwModel hw  = HwModel(multiType, mspVersion, capability);
+
+
     HwModel hwModel = createHwModel(manifest);
     RrSerial mc = createMc(manifest);
     RrVersion version;
@@ -20,7 +29,6 @@ Environment Ld001EnvProcessor::createEnvironment(json manifest) {
 }
 
 Environment* Ld001EnvProcessor::createEnvironmentRef(json manifest) {
-
     HwModel hwModel = createHwModel(manifest);
     RrSerial mc = createMc(manifest);
     RrVersion version;
@@ -35,12 +43,10 @@ Environment* Ld001EnvProcessor::createEnvironmentRef(json manifest) {
 HwModel Ld001EnvProcessor::createHwModel(json manifest) {
     std::vector<string> keys = {"multitype", "mspversion", "capability"};
     verify(manifest, keys, "hwmodel");
-
     VALID_MULTITYPE_KEYS_INIT;
-    VALID_MSP_VERSION_KEYS_INIT;
 
     MULTITYPE_T multiType = VALID_MULTITYPE_KEYS.at(manifest["hwmodel"]["multitype"]);
-    MSP_VERSION mspVersion = VALID_MSP_VERSION_KEYS.at(manifest["hwmodel"]["mspversion"]);
+    MSP_VERSION mspVersion = MSP_VERSION::SKULD001;
     uint32_t capability = static_cast<uint32_t>(manifest["hwmodel"]["capability"]);
 
     return HwModel(multiType, mspVersion, capability);
