@@ -1,8 +1,21 @@
-#include <ld001/events/catagorizer/ldsqu001mapper.hpp>
+#include <ld001/environment/ld001_env_processor.hpp>
 
 using namespace rrobot;
 
 dlib::logger dlog_mapper("rr_mapper");
+
+using json = nlohmann::json;
+
+/**
+ * Create LD001 environment.
+ */
+Environment LdSqu001Mapper::createEnvironment(std::string content) {
+    if (!json::accept(content)) {
+        throw new InvalidFormat("could not read content of manifest");
+    }
+
+    return Ld001EnvProcessor::createEnvironment(json::parse(content));
+}
 
 /*
  * Performs inilization.

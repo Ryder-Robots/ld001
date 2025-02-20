@@ -30,6 +30,8 @@ namespace rrobot {
 
             std::vector<RRP_QUEUES> queueNames() override;
 
+            Environment createEnvironment(std::string content) override;
+
             void init(Environment* environment, StateIface* state, StateManagerIface* statusProcessor) override;
 
     };

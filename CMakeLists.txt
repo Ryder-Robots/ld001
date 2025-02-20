@@ -58,6 +58,7 @@ set(fatcnt_SOURCES
     src/ld001/events/ai/ai_virtual_predictor.cpp
     src/ld001/events/hbridgecontroller.cpp
     src/ld001/events/catagorizer/ldsqu001mapper.cpp
+    src/ld001/environment/ld001_env_processor.cpp
 )
 
 set(JSON_VERSION v3.11.3)
